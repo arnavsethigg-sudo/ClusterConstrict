@@ -5,7 +5,7 @@
 The "embed" variant is the same linear-PTT log-conformation solver, adapted
 for embedded boundaries (embed.h):
 
-It skips solid/cut cells: every stress update loop is protected by a loop that skips all solid/cut cells part of the embedded boundary.
+* In the lptt-log-conform.h variant, every stress update loop is protected by a loop that skips all solid/cut cells part of the embedded boundary.
 
 # LPTTValidation : 2-d Axisymmetric Pipe flow Solver
 
