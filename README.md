@@ -11,7 +11,7 @@ for embedded boundaries (embed.h):
 
 A Basilisk C solver for simulating fully developed axisymmetric pipe flow of a viscoelastic matrix described by the L-PTT model with a Newtonian solvent contribution. 
 
-This solver uses the log-conformation formulation to maintain numerical stability at high weissenberg numbers. The implementation is derived frimm the log-conform.h header present in the Basilisk source code.
+This solver uses the log-conformation formulation to maintain numerical stability at high weissenberg numbers. The implementation is derived from the log-conform.h header present in the Basilisk source code.
 
 In particular validation against analytical solutions for fully developed velocity profile described by Cruz et al., (2005)[1], is done using this solver.
 
