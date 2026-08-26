@@ -158,22 +158,6 @@ event tracer_advection (i++)
       pseudo_t R;
       diagonalization_2D (&Lambda, &R, &A);
       
-    if (Lambda.x <= 0. || Lambda.y <= 0. ||
-    !isfinite(Lambda.x) || !isfinite(Lambda.y)) {
-
-  fprintf(stderr,
-          "\nBAD EIGENVALUE BEFORE LOG\n"
-          "t=%g x=%g y=%g\n"
-          "Lx=%g Ly=%g\n"
-          "A11=%g A12=%g A22=%g\n"
-          "cs=%g\n",
-          t,x,y,
-          Lambda.x,Lambda.y,
-          A.x.x,A.x.y,A.y.y,
-          cs[]);
-  fflush(stderr);
-}
-
 double lx = log(max(Lambda.x,1e-30));
 double ly = log(max(Lambda.y,1e-30));
 

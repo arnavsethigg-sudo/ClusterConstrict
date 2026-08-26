@@ -1,5 +1,12 @@
 # ClusterConstrict
 
+### lptt-log-conform.h vs lptt-log-conform-embed.h
+
+The "embed" variant is the same linear-PTT log-conformation solver, adapted
+for embedded boundaries (embed.h):
+
+It skips solid/cut cells: every stress update loop is protected by a loop that skips all solid/cut cells part of the embedded boundary.
+
 # LPTTValidation : 2-d Axisymmetric Pipe flow Solver
 
 A Basilisk C solver for simulating fully developed axisymmetric pipe flow of a viscoelastic matrix described by the L-PTT model with a Newtonian solvent contribution. 
@@ -48,11 +55,16 @@ export OMP_NUM_THREADS=12
 ./run
 
   Number of threads subject to change based on the machine used to operate the solver.
+  
  ```
 
 
+## Ongoing_Force_Model
 
+This folder contains two .mp4 files.
+* Force_test.mp4 : Shows a test case where 2 droplets are initialised at a distance of 1 unit away from each other, and given an initial velocity of 1 unit. The video demonstrates the current results of the force model, which is currently being validated. 
 
+* Channel_geometry_2Drop.mp4 : Shows the proposed geometry for investigation. Two drops are initialised and travel through the constriction number, at present the force model is not integrated. The $Ca$ number is 0.05.
 
 # References
 
