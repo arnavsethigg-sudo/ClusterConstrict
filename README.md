@@ -5,13 +5,13 @@
 The "embed" variant is the same linear-PTT log-conformation solver, adapted
 for embedded boundaries (embed.h):
 
-It skips solid/cut cells: every stress update loop is protected by a loop that skips all solid/cut cells part of the embedded boundary.
+* In the lptt-log-conform-embed.h variant, every stress update loop is protected by a loop that skips all solid/cut cells part of the embedded boundary.
 
 # LPTTValidation : 2-d Axisymmetric Pipe flow Solver
 
 A Basilisk C solver for simulating fully developed axisymmetric pipe flow of a viscoelastic matrix described by the L-PTT model with a Newtonian solvent contribution. 
 
-This solver uses the log-conformation formulation to maintain numerical stability at high weissenberg numbers. The implementation is derived frimm the log-conform.h header present in the Basilisk source code.
+This solver uses the log-conformation formulation to maintain numerical stability at high weissenberg numbers. The implementation is derived from the log-conform.h header present in the Basilisk source code.
 
 In particular validation against analytical solutions for fully developed velocity profile described by Cruz et al., (2005)[1], is done using this solver.
 
