@@ -64,7 +64,7 @@ export OMP_NUM_THREADS=12
 This folder contains two .mp4 files.
 * Force_test.mp4 : Shows a test case where 2 droplets are initialised at a distance of 1 unit away from each other, and given an initial velocity of 1 unit. The video demonstrates the current results of the force model, which is currently being validated. 
 
-* Channel_geometry_2Drop.mp4 : Shows the proposed geometry for investigation. Two drops are initialised and travel through the constriction number, at present the force model is not integrated. The $Ca$ number is 0.05.
+* Channel_geometry_2Drop.mp4 : Shows the proposed geometry for investigation. Two drops are initialised and travel through the constriction, at present the force model is not integrated. The $Ca$ number is 0.05.
 
 # References
 
