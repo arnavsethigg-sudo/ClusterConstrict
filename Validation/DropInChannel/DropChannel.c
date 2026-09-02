@@ -7,12 +7,12 @@
 #include "view.h"
 
 // Non-dimensional control parameters 
-#define RE        1.0   // Continuous-phase Reynolds number (rho2 * U * R / mu2) [u=1]
-#define CA        1.  // Capillary number (mu2 * U / sigma)
-#define WI        0.   // Weissenberg number (lambda * U / R)
-#define MU_RATIO  1.0   // Viscosity ratio (solvent to polymeric)
-#define BETA      0.1   // Solvent viscosity fraction
-#define RHO_RATIO 1.0   // Density ratio (rho1 / rho2)
+#define RE 1.0 // Continuous-phase Reynolds number (rho2 * U * R / mu2) [u=1]
+#define CA 1. // Capillary number (mu2 * U / sigma)
+#define WI 0. // Weissenberg number (lambda * U / R)
+#define MU_RATIO 1.0 // Viscosity ratio (solvent to polymeric)
+#define BETA 0.1 // Solvent viscosity fraction
+#define RHO_RATIO 1.0 // Density ratio (rho1 / rho2)
 
 #define RIN 1.0
 /* Define any curved geometry here
@@ -44,9 +44,7 @@ int main()
 
   size (20.);
   origin (-10.,0.);
-
   init_grid (1<<9);
-
 
   // currently, the density of the droplet and continuous phase are equal.(neutral buoyancy)
   rho2 = 1.0;
@@ -77,10 +75,10 @@ int main()
   run();
 }
 
-// Inlet prescribed parabolic axial velocity profile.
+// Inlet - parabolic velocity profile.
 u.n[left] = dirichlet (2.*(1. - sq(y/RIN)));
 u.t[left] = dirichlet (0.);
-// Outlet fixed pressure with zero normal velocity gradient.
+// Outlet - fixed pressure.
 p[right]   = dirichlet (0.);
 u.n[right] = neumann (0.);
 u.t[right] = neumann (0.);
