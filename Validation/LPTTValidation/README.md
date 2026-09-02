@@ -24,6 +24,7 @@ viscosity ratios, β = μ_s / μ_₀.
 
 ## Compilation & execution
 
+```bash
 qcc -O2 -Wall -fopenmp Lptt.c -o run -lm
 
 export OMP_NUM_THREADS=12     
@@ -31,6 +32,8 @@ export OMP_NUM_THREADS=12
 > adjust to the machine being used
 
 ./run
+
+```
 
 The run advances to t = 70 (steady state) and writes the velocity profile to
 profile_beta_BETA.dat as two columns: radial position y and normalized
