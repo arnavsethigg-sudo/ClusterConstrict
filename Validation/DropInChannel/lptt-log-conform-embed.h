@@ -53,7 +53,7 @@ event defaults (i = 0) {
   }
 
   for (scalar s in {tau_p}) {
-    s.v.x.i = -1; // just a scalar, not the component of a vector
+    s.v.x.i = -1; 
     foreach_dimension()
       if (s.boundary[left] != periodic_bc) {
 	s[left] = neumann(0);
@@ -69,7 +69,7 @@ event defaults (i = 0) {
 typedef struct { double x, y;}   pseudo_v;
 typedef struct { pseudo_v x, y;} pseudo_t;
 
-// Diagonalise the tensor.
+
 static void diagonalization_2D (pseudo_v * Lambda, pseudo_t * R, pseudo_t * A)
 {
   if (sq(A->x.y) < 1e-15) {
@@ -98,11 +98,11 @@ static void diagonalization_2D (pseudo_v * Lambda, pseudo_t * R, pseudo_t * A)
   }
 }
 
-// Advect and update the stress.
+
 event tracer_advection (i++)
 {
 
-// Use tau_p for log-conformation.
+
   tensor Psi = tau_p;
 #if AXI
   scalar Psiqq = tau_qq;
@@ -125,7 +125,7 @@ event tracer_advection (i++)
       if (f_s)
 	f_s (trA[], &nu, &eta);
 
-// Convert stress to A.
+
       double fa = (mup[] != 0 ? lambda[]/(mup[]*eta) : 0.);
 
       pseudo_t A;
@@ -153,7 +153,7 @@ event tracer_advection (i++)
       Psiqq[] = log(Aqq);
 #endif
 
-// Eigenvalues and eigenvectors.
+
       pseudo_v Lambda;
       pseudo_t R;
       diagonalization_2D (&Lambda, &R, &A);
@@ -165,7 +165,7 @@ Psi.x.y[] = R.x.x*R.y.x*lx + R.y.y*R.x.y*ly;
 
 foreach_dimension()
   Psi.x.x[] = sq(R.x.x)*lx + sq(R.x.y)*ly;
-// Velocity-gradient terms.
+
       pseudo_t B;
       double OM = 0.;
       if (fabs(Lambda.x - Lambda.y) <= 1e-20) {
@@ -208,7 +208,7 @@ foreach_dimension()
   }
 
 #if AXI
-// Advect the log-conformation.
+
   advection ({Psi.x.x, Psi.x.y, Psi.y.y, Psiqq}, uf, dt);
 #else
   advection ({Psi.x.x, Psi.x.y, Psi.y.y}, uf, dt);
@@ -231,7 +231,7 @@ foreach_dimension()
     }
     else { 
       
-// Convert log(A) back to A.
+
       pseudo_t A = {{Psi.x.x[], Psi.x.y[]}, {Psi.y.x[], Psi.y.y[]}}, R;
       pseudo_v Lambda;
       diagonalization_2D (&Lambda, &R, &A);
@@ -249,7 +249,7 @@ foreach_dimension()
 	f_r (trA[], &nu, &eta);
       }
 
-// Apply PTT relaxation.
+
       double fa = exp(-nu*eta*dt/lambda[]);
 
 #if AXI
@@ -276,7 +276,7 @@ foreach_dimension()
 
       fa = mup[]/lambda[]*eta;
       
-// Convert A back to stress.
+
       tau_p.x.y[] = fa*nu*A.x.y;
 #if AXI
       tau_qq[] = fa*(nu*Aqq - 1.);
@@ -289,7 +289,6 @@ foreach_dimension()
 
 }
 
-// Add polymer stress to momentum.
 event acceleration (i++)
 {
   face vector av = a;
