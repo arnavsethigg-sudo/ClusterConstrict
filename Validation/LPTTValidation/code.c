@@ -3,8 +3,8 @@
 #include "lptt-log-conform.h"
 
 
-#define WI   1.0    // Weissenberg number (lambda*U_N / R)
-#define BETA 0.01   // Solvent viscosity fraction (mu_s/mu0)
+#define WI   1.0 // Weissenberg number (lambda*U_N / R)
+#define BETA 0.01 // Solvent viscosity fraction (mu_s/mu0)
 #define U_N  (1.0/8.0) // Newtonian mean velocity reference (Pipe Flow): U_N =(a_x*R^2)/(8*mu0)=1/8
 
 scalar lambdaf[], mupf[];
@@ -21,7 +21,7 @@ int main()
 
   u.t[top] = dirichlet (0.);
 
-  double mu0 = 1.0; // Total  viscosity (mu_s + mu_p = 1)
+  double mu0 = 1.0; // Total viscosity (mu_s + mu_p = 1)
 
   // Solvent and polymeric viscosity components
   MUS  = BETA * mu0;
@@ -52,12 +52,12 @@ event properties (i++)
 event init (t = 0)
 {
   lambda = lambdaf;
-  mup    = mupf;
+  mup = mupf;
 
   foreach() {
     lambdaf[] = LAMBDA;
-    mupf[]    = MUPP;
-    trA[]     = 3.; // Tr(A) = 3 initialisation
+    mupf[] = MUPP;
+    trA[] = 3.; // Tr(A) = 3 initialisation
   }
 
   boundary ({lambda, mup});
@@ -89,4 +89,4 @@ event profile (t = 70.)
   fclose (fp);
 }
 
-event end (t = 70.);
+event end (t = 70.); // Change appropriately to reach steady - state simulation.
