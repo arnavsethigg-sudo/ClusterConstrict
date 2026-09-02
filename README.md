@@ -26,7 +26,7 @@ The solver is fully non-dimensionalized.
 ## Compilation & Execution
  **Compile and run the solver:**
    ```bash
-   qcc -O2 -Wall -fopenmp code.c -o run -lm
+   qcc -O2 -Wall -fopenmp Lptt.c -o run -lm
    
    export OMP_NUM_THREADS=12 
    
