@@ -5,7 +5,7 @@ A Basilisk C solver Lptt.c for fully developed, axisymmetric pipe flow of a (L-P
 The solver uses the log-conformation formulation (lptt-log-conform.h) to remain
 numerically stable at high Weissenberg number, and is validated here against the
 analytical velocity profiles of Cruz et al.[1] over a sweep of solvent
-viscosity ratios, β = μ_s / μ_₀.
+viscosity ratios, BETA = μ_s / μ_₀.
 
 ## Problem setup
 
@@ -39,20 +39,20 @@ The run advances to t = 70 (steady state) and writes the velocity profile to
 profile_beta_BETA.dat as two columns: radial position y and normalized
 axial velocity u.x / U_N.
 
-To reproduce a different β case (and the corresponding plot in Plots/), edit
-BETA in Lptt.c to the desired value and recompile/rerun. The nominal
-Weissenberg number WI can be swept the same way.
+To reproduce a different $β$ case (and the corresponding plot in Plots/), edit
+BETA in Lptt.c to the desired value and recompile/rerun. The
+Weissenberg number $Wi$ can be swept the same way.
 
 ## Validation plots
 
-Plots/ contains the steady-state velocity profile for each β tested against
+Plots/ contains the steady-state velocity profile for each BETA tested against
 the Cruz et al. [1] analytical solution:
 
-- validation_beta_0.01.png — β = 0.01
-- validation_beta_0.1.png — β = 0.1
-- validation_beta_0.5.png — β = 0.5
-- validation_beta_0.8.png — β = 0.8
-- validation_beta_1.png — β = 1 
+- validation_beta_0.01.png — BETA = 0.01
+- validation_beta_0.1.png — BETA = 0.1
+- validation_beta_0.5.png — BETA = 0.5
+- validation_beta_0.8.png — BETA = 0.8
+- validation_beta_1.png — BETA = 1 
 - validation_all_beta.png — all cases overlaid
 
 ## Reference
