@@ -1,8 +1,8 @@
-/* Linear PTT Model-- adapted from the original log-conform.h */
+// Linear PTT Model-- adapted from the original log-conform.h 
 
 (const) scalar lambda[] = 1.; // Polymer relaxation time
-(const) scalar mup[]    = 1.; // Polymer viscosity
-double epsPTT           = 0.05; // Linear PTT extensibility parameter
+(const) scalar mup[] = 1.; // Polymer viscosity
+double epsPTT = 0.05; // Linear PTT extensibility parameter
 
 // f_s (stress) and f_r (relaxation)
 void (* f_s) (double, double *, double *) = NULL;
@@ -47,7 +47,7 @@ event defaults (i = 0) {
   foreach() {
     foreach_dimension()
       tau_p.x.x[] = 0.;
-    tau_p.x.y[] = 0.;
+      tau_p.x.y[] = 0.;
 #if AXI
     tau_qq[] = 0.;
 #endif
@@ -69,7 +69,6 @@ event defaults (i = 0) {
 #endif  
 }
 
-// Minimal structures for 2D tensor linear algebra
 typedef struct { double x, y; }   pseudo_v;
 typedef struct { pseudo_v x, y; } pseudo_t;
 
