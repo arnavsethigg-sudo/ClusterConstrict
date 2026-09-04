@@ -1,3 +1,4 @@
+// Model parameters.
 (const) scalar lambda[] = 1.;
 (const) scalar mup[] = 1.;
 double epsPTT = 0.05;
@@ -32,7 +33,7 @@ scalar tau_qq[];
 #endif
 (const) scalar trA[] = 0.;
 
-// Set initial values.
+// Initialize variables and boundary conditions.
 event defaults (i = 0) {
   if (is_constant (a.x))
     a = new face vector;
@@ -66,10 +67,12 @@ event defaults (i = 0) {
 #endif  
 }
 
+// Temporary tensor types.
 typedef struct { double x, y;}   pseudo_v;
 typedef struct { pseudo_v x, y;} pseudo_t;
 
 
+// Find eigenvalues and eigenvectors.
 static void diagonalization_2D (pseudo_v * Lambda, pseudo_t * R, pseudo_t * A)
 {
   if (sq(A->x.y) < 1e-15) {
@@ -99,15 +102,15 @@ static void diagonalization_2D (pseudo_v * Lambda, pseudo_t * R, pseudo_t * A)
 }
 
 
+// Evolve the log-conformation tensor.
 event tracer_advection (i++)
 {
-
-
   tensor Psi = tau_p;
 #if AXI
   scalar Psiqq = tau_qq;
 #endif
 
+  // Convert stress to conformation tensor.
   foreach() {
     if (cs[] <= 0.)
       continue;
@@ -125,7 +128,6 @@ event tracer_advection (i++)
       if (f_s)
 	f_s (trA[], &nu, &eta);
 
-
       double fa = (mup[] != 0 ? lambda[]/(mup[]*eta) : 0.);
 
       pseudo_t A;
@@ -135,37 +137,23 @@ event tracer_advection (i++)
 
 #if AXI
       double Aqq = (1. + fa*tau_qq[])/nu;
-
-      if (Aqq <= 0. || !isfinite(Aqq)) {
-        fprintf(stderr,
-                "\nBAD AQQ BEFORE LOG\n"
-                "t=%g x=%g y=%g\n"
-                "Aqq=%g tauqq=%g\n"
-                "fa=%g nu=%g\n"
-                "cs=%g lambda=%g mup=%g\n",
-                t,x,y,
-                Aqq,tau_qq[],
-                fa,nu,
-                cs[],lambda[],mup[]);
-        fflush(stderr);
-      }
-
       Psiqq[] = log(Aqq);
 #endif
 
-
+      // Calculate log of conformation tensor.
       pseudo_v Lambda;
       pseudo_t R;
       diagonalization_2D (&Lambda, &R, &A);
       
-double lx = log(max(Lambda.x,1e-30));
-double ly = log(max(Lambda.y,1e-30));
+      double lx = log(max(Lambda.x,1e-30));
+      double ly = log(max(Lambda.y,1e-30));
 
-Psi.x.y[] = R.x.x*R.y.x*lx + R.y.y*R.x.y*ly;
+      Psi.x.y[] = R.x.x*R.y.x*lx + R.y.y*R.x.y*ly;
 
-foreach_dimension()
-  Psi.x.x[] = sq(R.x.x)*lx + sq(R.x.y)*ly;
+      foreach_dimension()
+	Psi.x.x[] = sq(R.x.x)*lx + sq(R.x.y)*ly;
 
+      // Calculate stretching and rotation terms.
       pseudo_t B;
       double OM = 0.;
       if (fabs(Lambda.x - Lambda.y) <= 1e-20) {
@@ -194,6 +182,7 @@ foreach_dimension()
 	  B.x.x = M.x.x*sq(R.x.x)+M.y.y*sq(R.x.y);	
       }
 
+      // Update log-conformation tensor.
       double s = - Psi.x.y[];
       Psi.x.y[] += dt*(2.*B.x.y + OM*(Psi.y.y[] - Psi.x.x[]));
       foreach_dimension() {
@@ -207,20 +196,22 @@ foreach_dimension()
     }
   }
 
+  // Advect the log-conformation tensor.
 #if AXI
-
   advection ({Psi.x.x, Psi.x.y, Psi.y.y, Psiqq}, uf, dt);
 #else
   advection ({Psi.x.x, Psi.x.y, Psi.y.y}, uf, dt);
 #endif
 
   
+  // Convert log-conformation back to conformation and apply relaxation.
   foreach() {
     if (cs[] <= 0.)
       continue;
 
     if (lambda[] == 0.) {
 
+      // Newtonian limit.
       foreach_dimension()
 	tau_p.x.x[] = mup[]*(u.x[1,0] - u.x[-1,0])/Delta; 
       tau_p.x.y[] = mup[]*(u.y[1,0] - u.y[-1,0] +
@@ -231,7 +222,7 @@ foreach_dimension()
     }
     else { 
       
-
+      // Recover conformation tensor.
       pseudo_t A = {{Psi.x.x[], Psi.x.y[]}, {Psi.y.x[], Psi.y.y[]}}, R;
       pseudo_v Lambda;
       diagonalization_2D (&Lambda, &R, &A);
@@ -244,11 +235,11 @@ foreach_dimension()
       double Aqq = exp(Psiqq[]);
 #endif
 
+      // Apply LPTT relaxation.
       double eta = 1., nu = 1.;
       if (f_r) {
 	f_r (trA[], &nu, &eta);
       }
-
 
       double fa = exp(-nu*eta*dt/lambda[]);
 
@@ -261,7 +252,7 @@ foreach_dimension()
       foreach_dimension()
 	A.x.x = (1. - fa)/nu + A.x.x*fa;
       
-// Update tr(A).
+      // Update trace of conformation tensor.
       if (f_s || f_r) {
 	scalar t = trA;
 	t[] = A.x.x + A.y.y;
@@ -270,13 +261,13 @@ foreach_dimension()
 #endif
       }
 
+      // Convert conformation tensor to polymer stress.
       nu = 1; eta = 1.;
       if (f_s)
 	f_s (trA[], &nu, &eta);
 
       fa = mup[]/lambda[]*eta;
       
-
       tau_p.x.y[] = fa*nu*A.x.y;
 #if AXI
       tau_qq[] = fa*(nu*Aqq - 1.);
@@ -285,15 +276,17 @@ foreach_dimension()
 	tau_p.x.x[] = fa*(nu*A.x.x - 1.);
     }
   }
- 
-
 }
 
+
+// Add polymer stress to momentum equation.
 event acceleration (i++)
 {
   face vector av = a;
   foreach_face()
     if (fm.x[] > 1e-20) {
+
+      // Calculate polymer stress divergence.
       double shear = (tau_p.x.y[0,1]*cm[0,1] + tau_p.x.y[-1,1]*cm[-1,1] -
 		      tau_p.x.y[0,-1]*cm[0,-1] - tau_p.x.y[-1,-1]*cm[-1,-1])/4.;
       av.x[] += (shear + cm[]*tau_p.x.x[] - cm[-1]*tau_p.x.x[-1])*
